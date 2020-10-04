@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form onsubmit="return false">
+        <textarea id="message" style="height: 300px;width: 300px"></textarea>
+        <input type="button" value="消息发送" onclick="send(this.form.message.value)">
+        <textarea id="responseText" style="height: 300px;width: 300px"></textarea>
+        <input type="button" value="清空内容" onclick="document.getElementById('responseText').value=''">
+    </form>
+</body>
+<script>
+    var socket;
+    //判断当前是否支持浏览器websocket
+    if (window.WebSocket){
+        socket = new WebSocket("ws://xrtdfn.natappfree.cc/hello")
+        //相当于channelReado，ev 收到服务器端回送的消息
+        socket.onmessage = function (ev) {
+            console.log(ev.data)
+            let rt = document.getElementById('responseText')
+            rt.value = rt.value + "\n" + ev.data;
+        }
+        //连接开启执行的方法
+        socket.onopen = function (ev) {
+            let rt = document.getElementById('responseText')
+            rt.value = "连接开启了...";
+        }
+        //连接关闭执行的方法
+        socket.onclose = function (ev) {
+            let rt = document.getElementById('responseText')
+            rt.value = rt.value + "\n" +  "连接关闭了...";
+        }
+    }else {
+        alert("当前浏览器不支持websocket")
+    }
+    //发送消息到服务器
+    function send(message) {
+        if (!window.socket){ //判断socket是否创建好
+            return;
+        }
+        if (socket.readyState == WebSocket.OPEN){
+            //通过Socket发送消息
+            socket.send(message);
+        }else {
+            alert("连接没有开启");
+        }
+    }
+</script>
+</html>
