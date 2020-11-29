@@ -16,7 +16,7 @@
     var socket;
     //判断当前是否支持浏览器websocket
     if (window.WebSocket){
-        socket = new WebSocket("ws://xrtdfn.natappfree.cc/hello")
+        socket = new WebSocket("ws://localhost:9999/hello")
         //相当于channelReado，ev 收到服务器端回送的消息
         socket.onmessage = function (ev) {
             console.log(ev.data)
